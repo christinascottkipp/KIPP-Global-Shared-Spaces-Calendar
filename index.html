@@ -28,6 +28,24 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        /* Touch-friendly improvements */
+        button, .btn, .tab, .location-card, .calendar-day, .time-slot {
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+            touch-action: manipulation;
+        }
+        
+        /* Prevent text selection on double-tap */
+        .calendar-day, .time-slot, .location-card, .btn, .tab {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        /* Allow text selection in form inputs */
+        input, textarea, select {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        
         body {
             font-family: 'Work Sans', sans-serif;
             background: linear-gradient(135deg, #FAF9F6 0%, #F0EDE5 100%);
@@ -521,11 +539,202 @@
             font-family: 'Work Sans', sans-serif;
         }
         
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
-            .header h1 { font-size: 1.8em; }
-            .calendar-grid { gap: 5px; }
-            .location-grid { grid-template-columns: 1fr; }
-            .form-grid { grid-template-columns: 1fr; }
+            .container { 
+                padding: 10px; 
+                max-width: 100%;
+            }
+            
+            .header { 
+                padding: 20px 15px;
+                margin-bottom: 20px;
+                border-radius: 12px;
+            }
+            
+            .header h1 { 
+                font-size: 1.5em;
+                line-height: 1.3;
+            }
+            
+            .header p {
+                font-size: 0.9em;
+                line-height: 1.5;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .tab {
+                width: 100%;
+                padding: 12px;
+                font-size: 0.95em;
+            }
+            
+            .card {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .card h2 {
+                font-size: 1.3em;
+            }
+            
+            .location-grid { 
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .location-card {
+                padding: 15px;
+            }
+            
+            .location-card h3 {
+                font-size: 1.1em;
+            }
+            
+            .calendar-grid { 
+                gap: 3px;
+                font-size: 0.85em;
+            }
+            
+            .calendar-day {
+                min-height: 70px;
+                font-size: 0.8em;
+                padding: 2px;
+            }
+            
+            .time-slots {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .time-slot {
+                padding: 10px 8px;
+                font-size: 0.85em;
+            }
+            
+            .form-grid { 
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .form-group label {
+                font-size: 0.95em;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.95em;
+                width: 100%;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-group .btn {
+                width: 100%;
+            }
+            
+            .admin-card {
+                padding: 12px;
+            }
+            
+            .admin-card h3 {
+                font-size: 1em;
+            }
+            
+            .admin-actions {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .admin-actions button {
+                padding: 6px 10px;
+                font-size: 0.85em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .stat-card h3 {
+                font-size: 1.2em;
+            }
+            
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+                padding: 20px;
+                margin: 20px auto;
+            }
+            
+            .success-message {
+                font-size: 0.9em;
+                padding: 12px;
+            }
+        }
+        
+        /* Extra small mobile devices */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3em;
+            }
+            
+            .header p {
+                font-size: 0.85em;
+            }
+            
+            .calendar-grid {
+                gap: 2px;
+            }
+            
+            .calendar-day {
+                min-height: 60px;
+                font-size: 0.75em;
+            }
+            
+            .time-slots {
+                grid-template-columns: 1fr;
+            }
+            
+            .card h2 {
+                font-size: 1.2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Tablet landscape */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .location-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .time-slots {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
     </style>
 </head>
@@ -543,7 +752,10 @@
         const ADMIN_NOTIFICATION_EMAILS = [
             'christinascott@kippnashville.org',
             'grodriguez@kippnashville.org',
-            'mdavis@kippnashville.org'
+            'mdavis@kippnashville.org',
+            'mgauthier@kippnashville.org',
+            'mmarsh@kippnashville.org',
+            'jessica.alexander@kippnashville.org'
         ];
 
         // Function to generate additional colors beyond the 6 brand colors
@@ -598,7 +810,10 @@
         const AUTHORIZED_ADMINS = [
             'christinascott@kippnashville.org',
             'grodriguez@kippnashville.org',
-            'mdavis@kippnashville.org'
+            'mdavis@kippnashville.org',
+            'mgauthier@kippnashville.org',
+            'mmarsh@kippnashville.org',
+            'jessica.alexander@kippnashville.org'
         ];
 
         const generateId = () => Math.random().toString(36).substr(2, 9);
