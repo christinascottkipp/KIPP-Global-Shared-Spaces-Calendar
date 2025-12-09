@@ -740,37 +740,17 @@
                                 
                                 if (result.success && result.data) {
                                     console.log(`✅ Loaded ${result.data.length} reservations via fetch`);
-                                    console.log('📋 Sample reservation from Sheets:', result.data[0]);
+                                    console.log('📋 All reservations from Sheets:', result.data);
                                     
-                                    // 🔥 FILTER OUT INCOMPLETE RESERVATIONS
-                                    const completeReservations = result.data.filter(r => {
-                                        // A reservation is complete if it has at least firstName OR email
-                                        const hasName = r.firstName && r.firstName !== '' && r.firstName !== 'Reserved';
-                                        const hasEmail = r.email && r.email !== '';
-                                        
-                                        if (!hasName && !hasEmail) {
-                                            console.warn('⚠️ Filtering out incomplete reservation:', r.id, r);
-                                            return false;
-                                        }
-                                        return true;
-                                    });
+                                    // Just use all data - don't filter anything
+                                    // Filtering was too aggressive and hiding valid reservations
                                     
-                                    console.log(`✅ After filtering: ${completeReservations.length} complete reservations (filtered out ${result.data.length - completeReservations.length})`);
-                                    
-                                    // Check if data has all required fields
-                                    if (completeReservations[0]) {
-                                        console.log('🔍 First reservation fields:', {
-                                            firstName: completeReservations[0].firstName,
-                                            lastName: completeReservations[0].lastName,
-                                            email: completeReservations[0].email,
-                                            phone: completeReservations[0].phone,
-                                            school: completeReservations[0].school,
-                                            purpose: completeReservations[0].purpose
-                                        });
+                                    if (result.data[0]) {
+                                        console.log('🔍 First reservation fields:', result.data[0]);
                                     }
                                     
-                                    setReservations(completeReservations);
-                                    localStorage.setItem('reservations', JSON.stringify(completeReservations));
+                                    setReservations(result.data);
+                                    localStorage.setItem('reservations', JSON.stringify(result.data));
                                     return;
                                 }
                             } catch (fetchError) {
@@ -2017,57 +1997,14 @@ END:VCALENDAR`;
                                 <h2>⚙️ Manage Reservations</h2>
                                 
                                 <div style={{marginBottom: '15px', padding: '12px', background: '#E8F5E9', borderRadius: '8px', fontSize: '0.9em'}}>
-                                    <strong>📊 Data Source:</strong> Showing {filteredReservations.length} reservation(s)
+                                    <strong>📊 Reservations:</strong> Showing {filteredReservations.length} of {reservations.length} total
                                     <button 
                                         className="btn btn-secondary" 
                                         onClick={() => {
-                                            const saved = localStorage.getItem('reservations');
-                                            if (saved) {
-                                                const data = JSON.parse(saved);
-                                                console.log('📦 LocalStorage data:', data);
-                                                setReservations(data);
-                                                setSuccessMessage(`Refreshed! Loaded ${data.length} reservations from local storage.`);
-                                                setTimeout(() => setSuccessMessage(''), 3000);
-                                            }
+                                            window.location.reload();
                                         }}
                                         style={{marginLeft: '15px', padding: '8px 16px', fontSize: '0.85em'}}>
-                                        🔄 Refresh from Local Storage
-                                    </button>
-                                    <button 
-                                        className="btn btn-danger" 
-                                        onClick={async () => {
-                                            if (confirm('⚠️ This will DELETE all reservations with missing contact information (name/email). This helps clean up incomplete data from Google Sheets.\n\nAre you sure?')) {
-                                                const incompleteReservations = reservations.filter(r => {
-                                                    const hasName = r.firstName && r.firstName !== '' && r.firstName !== 'Reserved';
-                                                    const hasEmail = r.email && r.email !== '';
-                                                    return !hasName && !hasEmail;
-                                                });
-                                                
-                                                console.log(`🗑️ Found ${incompleteReservations.length} incomplete reservations to delete`);
-                                                
-                                                for (const res of incompleteReservations) {
-                                                    console.log('🗑️ Deleting incomplete reservation:', res.id);
-                                                    await deleteFromGoogleSheets(res.id);
-                                                }
-                                                
-                                                // Update local state to remove incomplete ones
-                                                const completeReservations = reservations.filter(r => {
-                                                    const hasName = r.firstName && r.firstName !== '' && r.firstName !== 'Reserved';
-                                                    const hasEmail = r.email && r.email !== '';
-                                                    return hasName || hasEmail;
-                                                });
-                                                
-                                                setReservations(completeReservations);
-                                                localStorage.setItem('reservations', JSON.stringify(completeReservations));
-                                                
-                                                setSuccessMessage(`✅ Cleaned up ${incompleteReservations.length} incomplete reservation(s). Page will reload in 2 seconds...`);
-                                                setTimeout(() => {
-                                                    window.location.reload();
-                                                }, 2000);
-                                            }
-                                        }}
-                                        style={{marginLeft: '10px', padding: '8px 16px', fontSize: '0.85em'}}>
-                                        🧹 Clean Up Incomplete Data
+                                        🔄 Reload Page
                                     </button>
                                 </div>
                                 
@@ -2094,7 +2031,7 @@ END:VCALENDAR`;
                                             <div key={reservation.id} className={`reservation-item status-${reservation.status}`}>
                                                 <div className="reservation-header">
                                                     <div className="reservation-title">
-                                                        {reservation.firstName || 'N/A'} {reservation.lastName || 'N/A'}
+                                                        {(reservation.firstName || reservation.firstname || 'N/A')} {(reservation.lastName || reservation.lastname || 'N/A')}
                                                     </div>
                                                     <div className={`reservation-status status-${reservation.status}`}>{reservation.status}</div>
                                                 </div>
@@ -2109,11 +2046,11 @@ END:VCALENDAR`;
                                                     </div>
                                                     <div className="reservation-detail-item">
                                                         <span className="reservation-detail-label">Start Time</span>
-                                                        {formatTimeSlot(reservation.timeSlot)}
+                                                        {formatTimeSlot(reservation.timeSlot || reservation.timeslot)}
                                                     </div>
                                                     <div className="reservation-detail-item">
                                                         <span className="reservation-detail-label">End Time</span>
-                                                        {formatTimeSlot(reservation.endTime)}
+                                                        {formatTimeSlot(reservation.endTime || reservation.endtime)}
                                                     </div>
                                                     <div className="reservation-detail-item">
                                                         <span className="reservation-detail-label">Duration</span>
@@ -2127,10 +2064,10 @@ END:VCALENDAR`;
                                                         <span className="reservation-detail-label">Email</span>
                                                         {reservation.email || 'N/A'}
                                                     </div>
-                                                    {reservation.secondaryEmail && (
+                                                    {(reservation.secondaryEmail || reservation.secondaryemail) && (
                                                         <div className="reservation-detail-item">
                                                             <span className="reservation-detail-label">Secondary Email</span>
-                                                            {reservation.secondaryEmail}
+                                                            {reservation.secondaryEmail || reservation.secondaryemail}
                                                         </div>
                                                     )}
                                                     <div className="reservation-detail-item">
@@ -2139,7 +2076,7 @@ END:VCALENDAR`;
                                                     </div>
                                                     <div className="reservation-detail-item">
                                                         <span className="reservation-detail-label">People</span>
-                                                        {reservation.numberOfPeople || 'N/A'}
+                                                        {reservation.numberOfPeople || reservation.numberofpeople || 'N/A'}
                                                     </div>
                                                     <div className="reservation-detail-item" style={{gridColumn: '1 / -1'}}>
                                                         <span className="reservation-detail-label">Purpose</span>
