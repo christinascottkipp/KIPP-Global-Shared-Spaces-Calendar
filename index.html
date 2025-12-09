@@ -28,19 +28,16 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Touch-friendly improvements */
         button, .btn, .tab, .location-card, .calendar-day, .time-slot {
             -webkit-tap-highlight-color: rgba(0,0,0,0.1);
             touch-action: manipulation;
         }
         
-        /* Prevent text selection on double-tap */
         .calendar-day, .time-slot, .location-card, .btn, .tab {
             -webkit-user-select: none;
             user-select: none;
         }
         
-        /* Allow text selection in form inputs */
         input, textarea, select {
             -webkit-user-select: text;
             user-select: text;
@@ -285,10 +282,6 @@
         
         .calendar-day.disabled { color: var(--text-light); cursor: not-allowed; opacity: 0.4; }
         .calendar-day.other-month { color: var(--text-light); opacity: 0.3; }
-        
-        .calendar-day.has-reservation::after {
-            display: none; /* Using background colors instead of dots */
-        }
         
         .time-slots {
             display: grid;
@@ -539,245 +532,58 @@
             font-family: 'Work Sans', sans-serif;
         }
         
-        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
-            .container { 
-                padding: 10px; 
-                max-width: 100%;
-            }
-            
-            .header { 
-                padding: 20px 15px;
-                margin-bottom: 20px;
-                border-radius: 12px;
-            }
-            
-            .header h1 { 
-                font-size: 1.5em;
-                line-height: 1.3;
-            }
-            
-            .header p {
-                font-size: 0.9em;
-                line-height: 1.5;
-            }
-            
-            .tabs {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .tab {
-                width: 100%;
-                padding: 12px;
-                font-size: 0.95em;
-            }
-            
-            .card {
-                padding: 15px;
-                margin-bottom: 20px;
-            }
-            
-            .card h2 {
-                font-size: 1.3em;
-            }
-            
-            /* Admin Login Form - Mobile Optimized */
-            .card form {
-                max-width: 100%;
-            }
-            
-            .card form input[type="email"],
-            .card form input[type="password"] {
-                width: 100%;
-                font-size: 16px; /* Prevents iOS zoom */
-                padding: 12px;
-                margin-bottom: 15px;
-            }
-            
-            .card form button[type="submit"] {
-                width: 100%;
-                padding: 14px;
-                font-size: 1em;
-            }
-            
-            /* Admin Panel - Mobile Optimized */
-            .admin-card {
-                padding: 12px;
-                margin-bottom: 15px;
-                word-wrap: break-word;
-                overflow-wrap: break-word;
-            }
-            
-            .admin-card h3 {
-                font-size: 0.95em;
-                margin-bottom: 8px;
-                word-break: break-word;
-            }
-            
-            .admin-card p {
-                font-size: 0.85em;
-                line-height: 1.4;
-                margin-bottom: 6px;
-                word-break: break-word;
-            }
-            
-            .admin-actions {
-                flex-wrap: wrap;
-                gap: 6px;
-                margin-top: 10px;
-            }
-            
-            .admin-actions button {
-                padding: 8px 12px;
-                font-size: 0.8em;
-                flex: 1 1 45%;
-                min-width: 80px;
-            }
-            
-            /* Ensure email addresses wrap on mobile */
-            .admin-card p strong {
-                word-break: break-all;
-            }
-            
-            /* Filter buttons - mobile friendly */
-            .btn-group {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .btn-group .btn {
-                width: 100%;
-                padding: 10px;
-                font-size: 0.9em;
-            }
-            
-            .location-grid { 
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-            
-            .location-card {
-                padding: 15px;
-            }
-            
-            .location-card h3 {
-                font-size: 1.1em;
-            }
-            
-            .calendar-grid { 
-                gap: 3px;
-                font-size: 0.85em;
-            }
-            
-            .calendar-day {
-                min-height: 70px;
-                font-size: 0.8em;
-                padding: 2px;
-            }
-            
-            .time-slots {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            
-            .time-slot {
-                padding: 10px 8px;
-                font-size: 0.85em;
-            }
-            
-            .form-grid { 
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .form-group label {
-                font-size: 0.95em;
-            }
-            
-            .form-group input,
-            .form-group select,
-            .form-group textarea {
-                font-size: 16px; /* Prevents zoom on iOS */
-            }
-            
-            .btn {
-                padding: 12px 20px;
-                font-size: 0.95em;
-                width: 100%;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-            
-            .stat-card {
-                padding: 12px;
-            }
-            
-            .stat-card h3 {
-                font-size: 1.2em;
-            }
-            
-            .modal-content {
-                width: 95%;
-                max-height: 90vh;
-                padding: 20px;
-                margin: 20px auto;
-            }
-            
-            .success-message {
-                font-size: 0.9em;
-                padding: 12px;
-            }
+            .container { padding: 10px; max-width: 100%; }
+            .header { padding: 20px 15px; margin-bottom: 20px; border-radius: 12px; }
+            .header h1 { font-size: 1.5em; line-height: 1.3; }
+            .header p { font-size: 0.9em; line-height: 1.5; }
+            .tabs { flex-direction: column; gap: 10px; }
+            .tab { width: 100%; padding: 12px; font-size: 0.95em; }
+            .card { padding: 15px; margin-bottom: 20px; }
+            .card h2 { font-size: 1.3em; }
+            .card form { max-width: 100%; }
+            .card form input[type="email"], .card form input[type="password"] { width: 100%; font-size: 16px; padding: 12px; margin-bottom: 15px; }
+            .card form button[type="submit"] { width: 100%; padding: 14px; font-size: 1em; }
+            .admin-card { padding: 12px; margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word; }
+            .admin-card h3 { font-size: 0.95em; margin-bottom: 8px; word-break: break-word; }
+            .admin-card p { font-size: 0.85em; line-height: 1.4; margin-bottom: 6px; word-break: break-word; }
+            .admin-actions { flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+            .admin-actions button { padding: 8px 12px; font-size: 0.8em; flex: 1 1 45%; min-width: 80px; }
+            .admin-card p strong { word-break: break-all; }
+            .btn-group { flex-direction: column; gap: 8px; }
+            .btn-group .btn { width: 100%; padding: 10px; font-size: 0.9em; }
+            .location-grid { grid-template-columns: 1fr; gap: 10px; }
+            .location-card { padding: 15px; }
+            .location-card h3 { font-size: 1.1em; }
+            .calendar-grid { gap: 3px; font-size: 0.85em; }
+            .calendar-day { min-height: 70px; font-size: 0.8em; padding: 2px; }
+            .time-slots { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .time-slot { padding: 10px 8px; font-size: 0.85em; }
+            .form-grid { grid-template-columns: 1fr; gap: 15px; }
+            .form-group label { font-size: 0.95em; }
+            .form-group input, .form-group select, .form-group textarea { font-size: 16px; }
+            .btn { padding: 12px 20px; font-size: 0.95em; width: 100%; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stat-card { padding: 12px; }
+            .stat-card h3 { font-size: 1.2em; }
+            .modal-content { width: 95%; max-height: 90vh; padding: 20px; margin: 20px auto; }
+            .success-message { font-size: 0.9em; padding: 12px; }
         }
         
-        /* Extra small mobile devices */
         @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.3em;
-            }
-            
-            .header p {
-                font-size: 0.85em;
-            }
-            
-            .calendar-grid {
-                gap: 2px;
-            }
-            
-            .calendar-day {
-                min-height: 60px;
-                font-size: 0.75em;
-            }
-            
-            .time-slots {
-                grid-template-columns: 1fr;
-            }
-            
-            .card h2 {
-                font-size: 1.2em;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+            .header h1 { font-size: 1.3em; }
+            .header p { font-size: 0.85em; }
+            .calendar-grid { gap: 2px; }
+            .calendar-day { min-height: 60px; font-size: 0.75em; }
+            .time-slots { grid-template-columns: 1fr; }
+            .card h2 { font-size: 1.2em; }
+            .stats-grid { grid-template-columns: 1fr; }
         }
         
-        /* Tablet landscape */
         @media (min-width: 769px) and (max-width: 1024px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .location-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .time-slots {
-                grid-template-columns: repeat(4, 1fr);
-            }
+            .container { padding: 20px; }
+            .location-grid { grid-template-columns: repeat(2, 1fr); }
+            .time-slots { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
@@ -787,15 +593,9 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // GOOGLE SHEETS DATABASE CONFIGURATION
         const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbwckqflPi3sw_hHW7qWelJNHuO9pvi478Q7ci6OLZMdbWGjynIxjRIGjDgTdArsnsX1/exec';
-        const USE_GOOGLE_SHEETS = true; // Set to false to use localStorage only
+        const USE_GOOGLE_SHEETS = true;
 
-        // EMAIL CONFIGURATION - FormSubmit (100% Free, No Setup Required)
-        // FormSubmit will send to these email addresses directly
-        // No access key needed - just works!
-        
-        // Admin emails that will receive notifications
         const ADMIN_NOTIFICATION_EMAILS = [
             'christinascott@kippnashville.org',
             'grodriguez@kippnashville.org',
@@ -805,7 +605,6 @@
             'jessica.alexander@kippnashville.org'
         ];
 
-        // Function to generate additional colors beyond the 6 brand colors
         const generateAdditionalColors = (count) => {
             const additionalColors = [
                 '#e74c3c', '#9b59b6', '#3498db', '#1abc9c', '#f39c12', 
@@ -828,13 +627,8 @@
         ];
 
         const SCHOOLS = [
-            'Global HS',
-            'Global MS', 
-            'Global ES',
-            'KIPP Forward',
-            'SST',
-            'Other KIPP Nashville Schools',
-            'Visitor'
+            'Global HS', 'Global MS', 'Global ES', 'KIPP Forward', 'SST',
+            'Other KIPP Nashville Schools', 'Visitor'
         ];
 
         const TIME_SLOTS = [
@@ -844,14 +638,6 @@
             '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM',
             '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM',
             '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM', '10:00 PM'
-        ];
-
-        const DURATION_OPTIONS = [
-            { value: 30, label: '30 minutes' }, { value: 60, label: '1 hour' },
-            { value: 90, label: '1.5 hours' }, { value: 120, label: '2 hours' },
-            { value: 180, label: '3 hours' }, { value: 240, label: '4 hours' },
-            { value: 300, label: '5 hours' }, { value: 360, label: '6 hours' },
-            { value: 420, label: '7 hours' }, { value: 480, label: '8 hours' }
         ];
 
         const AUTHORIZED_ADMINS = [
@@ -868,13 +654,45 @@
         const formatDate = (date) => {
             if (!date) return 'N/A';
             try {
-                return new Date(date).toLocaleDateString('en-US', { 
+                const d = new Date(date);
+                if (isNaN(d.getTime())) return 'Invalid Date';
+                return d.toLocaleDateString('en-US', { 
                     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
                 });
             } catch (e) {
                 console.error('formatDate error:', e);
                 return 'Invalid Date';
             }
+        };
+
+        // 🔥 CRITICAL FIX: Format time slots to handle Google Sheets ISO dates
+        const formatTimeSlot = (timeSlot) => {
+            if (!timeSlot || timeSlot === 'N/A' || timeSlot === '') return 'N/A';
+            
+            // If it's already in correct format (e.g., "10:00 PM"), return it
+            if (typeof timeSlot === 'string' && (timeSlot.includes('AM') || timeSlot.includes('PM'))) {
+                return timeSlot;
+            }
+            
+            // If it's an ISO date string from Google Sheets (e.g., "1899-12-30T22:00:00.000Z")
+            if (typeof timeSlot === 'string' && timeSlot.includes('T')) {
+                try {
+                    const date = new Date(timeSlot);
+                    const hours = date.getUTCHours();
+                    const minutes = date.getUTCMinutes();
+                    
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const displayHours = hours % 12 || 12;
+                    const displayMinutes = minutes.toString().padStart(2, '0');
+                    
+                    return `${displayHours}:${displayMinutes} ${ampm}`;
+                } catch (e) {
+                    console.error('Error formatting time:', e, timeSlot);
+                    return String(timeSlot);
+                }
+            }
+            
+            return String(timeSlot);
         };
 
         const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
@@ -911,29 +729,26 @@
             });
 
             useEffect(() => {
-                // Load reservations from Google Sheets using polling with hidden iframe
                 const loadReservations = async () => {
                     if (USE_GOOGLE_SHEETS) {
                         try {
                             console.log('📊 Loading reservations from Google Sheets...');
                             
-                            // Try direct fetch first (will work if no CORS)
                             try {
                                 const response = await fetch(GOOGLE_SHEETS_API_URL);
                                 const result = await response.json();
                                 
                                 if (result.success && result.data) {
                                     console.log(`✅ Loaded ${result.data.length} reservations via fetch`);
+                                    console.log('Sample reservation:', result.data[0]);
                                     setReservations(result.data);
                                     localStorage.setItem('reservations', JSON.stringify(result.data));
                                     return;
                                 }
                             } catch (fetchError) {
                                 console.log('⚠️ Fetch failed (CORS), will use localStorage for display');
-                                // Don't throw - just continue to localStorage
                             }
                             
-                            // Use localStorage as display source
                             console.log('📦 Loading from localStorage for display');
                             const saved = localStorage.getItem('reservations');
                             if (saved) {
@@ -946,7 +761,6 @@
                             if (saved) setReservations(JSON.parse(saved));
                         }
                     } else {
-                        // Use localStorage only
                         const saved = localStorage.getItem('reservations');
                         if (saved) setReservations(JSON.parse(saved));
                     }
@@ -954,7 +768,6 @@
                 
                 loadReservations();
                 
-                // Reload data every 30 seconds to keep fresh
                 const interval = setInterval(loadReservations, 30000);
                 
                 const savedAdmin = localStorage.getItem('adminEmail');
@@ -967,7 +780,6 @@
             }, []);
 
             useEffect(() => {
-                // Backup to localStorage whenever reservations change
                 localStorage.setItem('reservations', JSON.stringify(reservations));
             }, [reservations]);
 
@@ -1015,27 +827,23 @@
                 setTimeout(() => setSuccessMessage(''), 3000);
             };
 
-            // Google Sheets Helper Functions - JSONP Version (Bypasses CORS)
             const saveToGoogleSheets = async (reservation) => {
                 if (!USE_GOOGLE_SHEETS) return true;
                 
                 try {
-                    console.log('💾 Saving reservation to Google Sheets (JSONP)...', reservation.id);
+                    console.log('💾 Saving reservation to Google Sheets:', reservation);
                     
-                    // Use JSONP approach with form submission
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = GOOGLE_SHEETS_API_URL;
                     form.target = 'hidden-iframe-' + Date.now();
                     form.style.display = 'none';
                     
-                    // Create hidden iframe
                     const iframe = document.createElement('iframe');
                     iframe.name = form.target;
                     iframe.style.display = 'none';
                     document.body.appendChild(iframe);
                     
-                    // Add data as form field
                     const input = document.createElement('input');
                     input.type = 'hidden';
                     input.name = 'data';
@@ -1045,7 +853,6 @@
                     document.body.appendChild(form);
                     form.submit();
                     
-                    // Clean up after delay
                     setTimeout(() => {
                         document.body.removeChild(form);
                         document.body.removeChild(iframe);
@@ -1064,7 +871,7 @@
                 if (!USE_GOOGLE_SHEETS) return true;
                 
                 try {
-                    console.log('📝 Updating reservation in Google Sheets (JSONP)...', reservation.id);
+                    console.log('📝 Updating reservation in Google Sheets:', reservation);
                     
                     const form = document.createElement('form');
                     form.method = 'POST';
@@ -1107,7 +914,7 @@
                 if (!USE_GOOGLE_SHEETS) return true;
                 
                 try {
-                    console.log('🗑️ Deleting reservation from Google Sheets (JSONP)...', reservationId);
+                    console.log('🗑️ Deleting reservation from Google Sheets:', reservationId);
                     
                     const form = document.createElement('form');
                     form.method = 'POST';
@@ -1154,35 +961,33 @@
                 const userEmail = reservation.email;
                 const secondaryEmail = reservation.secondaryEmail;
                 
-                // Format the reservation details
                 const reservationDetails = `
 RESERVATION DETAILS:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Location: ${reservation.location}
+Location: ${reservation.location || 'N/A'}
 Date: ${formatDate(new Date(reservation.date))}
-Start Time: ${reservation.timeSlot}
-End Time: ${reservation.endTime}
+Start Time: ${formatTimeSlot(reservation.timeSlot)}
+End Time: ${formatTimeSlot(reservation.endTime)}
 Duration: ${formatDuration(reservation.duration)}
 
 CONTACT INFORMATION:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Name: ${reservation.firstName} ${reservation.lastName}
-Email: ${reservation.email}
+Name: ${reservation.firstName || ''} ${reservation.lastName || ''}
+Email: ${reservation.email || 'N/A'}
 ${reservation.secondaryEmail ? `Secondary Email: ${reservation.secondaryEmail}` : ''}
-Phone: ${reservation.phone}
+Phone: ${reservation.phone || 'N/A'}
 
 DETAILS:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-School: ${reservation.school}
-Number of People: ${reservation.numberOfPeople}
-Purpose: ${reservation.purpose}
+School: ${reservation.school || 'N/A'}
+Number of People: ${reservation.numberOfPeople || 'N/A'}
+Purpose: ${reservation.purpose || 'N/A'}
 ${reservation.notes ? `Notes: ${reservation.notes}` : ''}
                 `;
 
                 try {
                     let subject, message;
 
-                    // APPROVAL EMAIL
                     if (type === 'approval') {
                         subject = `✅ Reservation APPROVED - ${reservation.location}`;
                         message = `Dear ${reservation.firstName} ${reservation.lastName},
@@ -1199,7 +1004,6 @@ Thank you,
 KIPP Antioch Global Campus`;
 
                         console.log('📤 Sending approval email to:', userEmail);
-                        // Send to user
                         const formData = new FormData();
                         formData.append('email', userEmail);
                         formData.append('_subject', subject);
@@ -1214,7 +1018,6 @@ KIPP Antioch Global Campus`;
                         
                         console.log('✅ Approval email response:', response.status);
 
-                        // Send to secondary email if provided
                         if (secondaryEmail) {
                             console.log('📤 Sending approval email to secondary:', secondaryEmail);
                             const secondaryFormData = new FormData();
@@ -1232,7 +1035,6 @@ KIPP Antioch Global Campus`;
                         }
                     }
 
-                    // DENIAL EMAIL
                     else if (type === 'denial') {
                         subject = `❌ Reservation DENIED - ${reservation.location}`;
                         message = `Dear ${reservation.firstName} ${reservation.lastName},
@@ -1247,7 +1049,6 @@ Thank you,
 KIPP Antioch Global Campus`;
 
                         console.log('📤 Sending denial email to:', userEmail);
-                        // Send to user
                         const formData = new FormData();
                         formData.append('email', userEmail);
                         formData.append('_subject', subject);
@@ -1262,7 +1063,6 @@ KIPP Antioch Global Campus`;
                         
                         console.log('✅ Denial email response:', response.status);
 
-                        // Send to secondary email if provided
                         if (secondaryEmail) {
                             console.log('📤 Sending denial email to secondary:', secondaryEmail);
                             const secondaryFormData = new FormData();
@@ -1280,7 +1080,6 @@ KIPP Antioch Global Campus`;
                         }
                     }
 
-                    // PENDING EMAIL (sent to admins only)
                     else if (type === 'pending') {
                         subject = `⏳ NEW RESERVATION PENDING - ${reservation.location}`;
                         message = `A new reservation is awaiting your review:
@@ -1294,14 +1093,13 @@ Please log in to the reservation system to approve or deny this request.
 KIPP Antioch Global Campus Reservation System`;
 
                         console.log('📤 Sending pending notifications to', ADMIN_NOTIFICATION_EMAILS.length, 'admins');
-                        // Send to all admins
                         for (const adminEmail of ADMIN_NOTIFICATION_EMAILS) {
                             console.log('📤 Sending to admin:', adminEmail);
                             const adminFormData = new FormData();
                             adminFormData.append('email', adminEmail);
                             adminFormData.append('_subject', subject);
                             adminFormData.append('message', message);
-                            adminFormData.append('_replyto', userEmail); // Admin can reply to user
+                            adminFormData.append('_replyto', userEmail);
                             adminFormData.append('_template', 'table');
 
                             try {
@@ -1325,7 +1123,7 @@ KIPP Antioch Global Campus Reservation System`;
 
             const downloadOutlookCalendar = (reservation) => {
                 const startDate = new Date(reservation.date);
-                let timeStr = reservation.timeSlot;
+                let timeStr = formatTimeSlot(reservation.timeSlot);
                 const isPM = timeStr.includes('PM');
                 timeStr = timeStr.replace(' AM', '').replace(' PM', '');
                 const [hours, minutes] = timeStr.split(':');
@@ -1339,7 +1137,6 @@ KIPP Antioch Global Campus Reservation System`;
                 
                 const formatICSDate = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
                 
-                // Enhanced description with all details
                 const description = `KIPP Antioch Global Campus Reservation\\n\\n` +
                     `Contact: ${reservation.firstName} ${reservation.lastName}\\n` +
                     `Email: ${reservation.email}\\n` +
@@ -1350,7 +1147,6 @@ KIPP Antioch Global Campus Reservation System`;
                     `${reservation.notes ? `Notes: ${reservation.notes}\\n` : ''}` +
                     `\\nStatus: ${reservation.status.toUpperCase()}`;
                 
-                // Create ICS file with better Microsoft Office compatibility
                 const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//KIPP Antioch//Reservation Calendar//EN
@@ -1384,10 +1180,9 @@ END:VCALENDAR`;
                 URL.revokeObjectURL(url);
             };
 
-            // Add function to create Outlook web calendar link
             const openOutlookWeb = (reservation) => {
                 const startDate = new Date(reservation.date);
-                let timeStr = reservation.timeSlot;
+                let timeStr = formatTimeSlot(reservation.timeSlot);
                 const isPM = timeStr.includes('PM');
                 timeStr = timeStr.replace(' AM', '').replace(' PM', '');
                 const [hours, minutes] = timeStr.split(':');
@@ -1399,7 +1194,6 @@ END:VCALENDAR`;
                 const endDate = new Date(startDate);
                 endDate.setMinutes(endDate.getMinutes() + reservation.duration);
                 
-                // Format for Outlook.com
                 const formatOutlookDate = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0];
                 
                 const params = new URLSearchParams({
@@ -1415,10 +1209,9 @@ END:VCALENDAR`;
                 window.open(`https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`, '_blank');
             };
 
-            // Add function for Google Calendar
             const openGoogleCalendar = (reservation) => {
                 const startDate = new Date(reservation.date);
-                let timeStr = reservation.timeSlot;
+                let timeStr = formatTimeSlot(reservation.timeSlot);
                 const isPM = timeStr.includes('PM');
                 timeStr = timeStr.replace(' AM', '').replace(' PM', '');
                 const [hours, minutes] = timeStr.split(':');
@@ -1430,7 +1223,6 @@ END:VCALENDAR`;
                 const endDate = new Date(startDate);
                 endDate.setMinutes(endDate.getMinutes() + reservation.duration);
                 
-                // Format for Google Calendar
                 const formatGoogleDate = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
                 
                 const params = new URLSearchParams({
@@ -1452,13 +1244,20 @@ END:VCALENDAR`;
             const handleSubmit = async (e) => {
                 e.preventDefault();
                 
+                console.log('📝 Form submitted with data:', formData);
+                
                 if (selectedLocations.length === 0 || selectedDates.length === 0 || !selectedTimeSlot || !selectedEndTime) {
                     alert('Please select at least one location, at least one date, start time, and end time');
                     return;
                 }
 
-                // Check if Global Gym is selected
-                const gymSelected = selectedLocations.some(loc => loc.id === 1); // Global Gym has id 1
+                // Validate form data
+                if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.school || !formData.purpose) {
+                    alert('Please fill in all required fields (First Name, Last Name, Email, Phone, School, Purpose)');
+                    return;
+                }
+
+                const gymSelected = selectedLocations.some(loc => loc.id === 1);
                 if (gymSelected) {
                     alert('Please contact any Global Athletic Directors regarding the installation of floor coverings if tables or chairs are needed during gym usage.');
                 }
@@ -1466,12 +1265,19 @@ END:VCALENDAR`;
                 const calculatedDuration = calculateDuration(selectedTimeSlot, selectedEndTime);
                 const newReservations = [];
 
-                // Create a reservation for each combination of selected location and date
                 selectedLocations.forEach(location => {
                     selectedDates.forEach(date => {
                         const newReservation = {
                             id: generateId(),
-                            ...formData,
+                            firstName: formData.firstName,
+                            lastName: formData.lastName,
+                            email: formData.email,
+                            phone: formData.phone,
+                            school: formData.school,
+                            numberOfPeople: formData.numberOfPeople,
+                            purpose: formData.purpose,
+                            notes: formData.notes,
+                            secondaryEmail: formData.secondaryEmail,
                             location: location.name,
                             locationId: location.id,
                             date: date.toISOString(),
@@ -1482,15 +1288,23 @@ END:VCALENDAR`;
                             createdAt: new Date().toISOString(),
                             color: location.color
                         };
+                        console.log('🆕 Created new reservation:', newReservation);
                         newReservations.push(newReservation);
                     });
                 });
 
                 if (editingReservation) {
-                    // When editing, just update the single reservation
                     const updatedReservation = {
                         ...editingReservation,
-                        ...formData,
+                        firstName: formData.firstName,
+                        lastName: formData.lastName,
+                        email: formData.email,
+                        phone: formData.phone,
+                        school: formData.school,
+                        numberOfPeople: formData.numberOfPeople,
+                        purpose: formData.purpose,
+                        notes: formData.notes,
+                        secondaryEmail: formData.secondaryEmail,
                         location: selectedLocations[0].name,
                         locationId: selectedLocations[0].id,
                         date: selectedDates[0].toISOString(),
@@ -1499,21 +1313,17 @@ END:VCALENDAR`;
                         duration: calculatedDuration
                     };
                     
-                    // Update in Google Sheets
                     await updateGoogleSheets(updatedReservation);
                     
                     setReservations(prev => prev.map(r => r.id === editingReservation.id ? updatedReservation : r));
                     setSuccessMessage('Reservation updated successfully!');
                 } else {
-                    // Save each new reservation to Google Sheets
                     for (const reservation of newReservations) {
                         await saveToGoogleSheets(reservation);
                     }
                     
-                    // Add all new reservations to local state
                     setReservations(prev => [...prev, ...newReservations]);
                     
-                    // Create success message
                     const totalReservations = newReservations.length;
                     const locationCount = selectedLocations.length;
                     const dateCount = selectedDates.length;
@@ -1532,7 +1342,6 @@ END:VCALENDAR`;
                     setLastCreatedReservation(newReservations[0]);
                     setShowCalendarDownload(true);
                     
-                    // Send pending email for each reservation
                     newReservations.forEach(res => sendEmail('pending', res));
                 }
 
@@ -1560,7 +1369,6 @@ END:VCALENDAR`;
                 const reservation = reservations.find(r => r.id === id);
                 const updatedReservation = { ...reservation, status: 'approved' };
                 
-                // Update in Google Sheets
                 await updateGoogleSheets(updatedReservation);
                 
                 updateReservation(id, { status: 'approved' });
@@ -1574,7 +1382,6 @@ END:VCALENDAR`;
                     const reservation = reservations.find(r => r.id === id);
                     const updatedReservation = { ...reservation, status: 'denied' };
                     
-                    // Update in Google Sheets
                     await updateGoogleSheets(updatedReservation);
                     
                     updateReservation(id, { status: 'denied' });
@@ -1586,7 +1393,6 @@ END:VCALENDAR`;
 
             const deleteReservation = async (id) => {
                 if (confirm('Are you sure you want to delete this reservation?')) {
-                    // Delete from Google Sheets
                     await deleteFromGoogleSheets(id);
                     
                     setReservations(prev => prev.filter(r => r.id !== id));
@@ -1598,10 +1404,14 @@ END:VCALENDAR`;
             const editReservation = (reservation) => {
                 setEditingReservation(reservation);
                 setFormData({
-                    firstName: reservation.firstName, lastName: reservation.lastName,
-                    email: reservation.email, phone: reservation.phone, school: reservation.school,
-                    numberOfPeople: reservation.numberOfPeople,
-                    purpose: reservation.purpose, notes: reservation.notes || '',
+                    firstName: reservation.firstName || '', 
+                    lastName: reservation.lastName || '',
+                    email: reservation.email || '', 
+                    phone: reservation.phone || '', 
+                    school: reservation.school || '',
+                    numberOfPeople: reservation.numberOfPeople || 1,
+                    purpose: reservation.purpose || '', 
+                    notes: reservation.notes || '',
                     secondaryEmail: reservation.secondaryEmail || ''
                 });
                 const location = LOCATIONS.find(l => l.id === reservation.locationId);
@@ -1648,7 +1458,6 @@ END:VCALENDAR`;
                 const startIndex = TIME_SLOTS.indexOf(selectedTimeSlot);
                 if (startIndex === -1) return [];
                 
-                // Find the earliest conflicting reservation across ALL selected locations AND dates
                 let maxEndIndex = TIME_SLOTS.length;
                 
                 selectedDates.forEach(selectedDate => {
@@ -1662,9 +1471,7 @@ END:VCALENDAR`;
                                 
                                 const resStartIndex = TIME_SLOTS.indexOf(r.timeSlot);
                                 
-                                // If this reservation starts after our selected start time
                                 if (resStartIndex > startIndex) {
-                                    // Limit our end time to not overlap with this reservation
                                     maxEndIndex = Math.min(maxEndIndex, resStartIndex);
                                 }
                             }
@@ -1672,7 +1479,6 @@ END:VCALENDAR`;
                     });
                 });
                 
-                // Return all time slots after the selected start time up to the next reservation
                 return TIME_SLOTS.slice(startIndex + 1, maxEndIndex);
             };
 
@@ -1680,49 +1486,51 @@ END:VCALENDAR`;
                 setSelectedLocations(prev => {
                     const isSelected = prev.some(loc => loc.id === location.id);
                     if (isSelected) {
-                        // Remove location
                         return prev.filter(loc => loc.id !== location.id);
                     } else {
-                        // Add location
                         return [...prev, location];
                     }
                 });
             };
 
             const toggleDateSelection = (date) => {
-                if (!date || !(date instanceof Date)) {
-                    console.error('toggleDateSelection: Invalid date', date);
-                    return;
-                }
-                
-                console.log('Toggling date:', date);
-                
-                setSelectedDates(prev => {
-                    try {
-                        const isSelected = prev.some(d => d && d.toDateString && d.toDateString() === date.toDateString());
-                        console.log('Is selected:', isSelected, 'Current dates:', prev.length);
-                        
-                        if (isSelected) {
-                            // Remove date
-                            const newDates = prev.filter(d => d && d.toDateString && d.toDateString() !== date.toDateString());
-                            // If no dates left, clear time slots
-                            if (newDates.length === 0) {
-                                setSelectedTimeSlot(null);
-                                setSelectedEndTime(null);
-                            }
-                            console.log('Removed date, new count:', newDates.length);
-                            return newDates;
-                        } else {
-                            // Add date
-                            const newDates = [...prev, date].sort((a, b) => a - b);
-                            console.log('Added date, new count:', newDates.length);
-                            return newDates;
-                        }
-                    } catch (e) {
-                        console.error('Error in toggleDateSelection:', e);
-                        return prev;
+                try {
+                    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+                        console.error('toggleDateSelection: Invalid date', date);
+                        return;
                     }
-                });
+                    
+                    setSelectedDates(prev => {
+                        try {
+                            const isSelected = prev.some(d => {
+                                if (!d || !(d instanceof Date) || isNaN(d.getTime())) return false;
+                                return d.toDateString() === date.toDateString();
+                            });
+                            
+                            if (isSelected) {
+                                const newDates = prev.filter(d => {
+                                    if (!d || !(d instanceof Date) || isNaN(d.getTime())) return false;
+                                    return d.toDateString() !== date.toDateString();
+                                });
+                                
+                                if (newDates.length === 0) {
+                                    setSelectedTimeSlot(null);
+                                    setSelectedEndTime(null);
+                                }
+                                
+                                return newDates;
+                            } else {
+                                const newDates = [...prev, date].sort((a, b) => a - b);
+                                return newDates;
+                            }
+                        } catch (innerError) {
+                            console.error('Error in toggleDateSelection inner:', innerError);
+                            return prev;
+                        }
+                    });
+                } catch (outerError) {
+                    console.error('Error in toggleDateSelection outer:', outerError);
+                }
             };
 
             const getBookedTimeSlots = () => {
@@ -1733,7 +1541,6 @@ END:VCALENDAR`;
                 
                 if (startIndex === -1 || endIndex === -1) return [];
                 
-                // Return all slots from start up to (but not including) end
                 return TIME_SLOTS.slice(startIndex, endIndex);
             };
 
@@ -1754,7 +1561,6 @@ END:VCALENDAR`;
                 
                 if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) return 60;
                 
-                // Each slot is 30 minutes apart
                 return (endIndex - startIndex) * 30;
             };
 
@@ -1837,7 +1643,7 @@ END:VCALENDAR`;
                                 <div className="location-grid">
                                     {LOCATIONS.map(location => {
                                         const isSelected = selectedLocations.some(loc => loc.id === location.id);
-                                        const lightColors = ['#fcda00', '#b9d3e7', '#f7941e']; // Yellow, light blue, orange
+                                        const lightColors = ['#fcda00', '#b9d3e7', '#f7941e'];
                                         const needsDarkText = lightColors.includes(location.color);
                                         
                                         return (
@@ -1865,38 +1671,12 @@ END:VCALENDAR`;
                                 <div style={{marginTop: '25px', padding: '15px', background: 'rgba(44, 95, 45, 0.05)', borderRadius: '12px'}}>
                                     <strong style={{display: 'block', marginBottom: '10px', color: 'var(--primary)'}}>📌 Color Legend:</strong>
                                     <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px'}}>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                            <div style={{width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#255694', border: '1px solid #ccc'}}></div>
-                                            <span>Gym</span>
-                                        </div>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                            <div style={{width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#9b59b6', border: '1px solid #ccc'}}></div>
-                                            <span>Soccer Field</span>
-                                        </div>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                            <div style={{width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#e84393', border: '1px solid #ccc'}}></div>
-                                            <span>Cafeteria 1</span>
-                                        </div>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                            <div style={{width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#e74c3c', border: '1px solid #ccc'}}></div>
-                                            <span>Storm Shelter</span>
-                                        </div>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                            <div style={{width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#f7941e', border: '1px solid #ccc'}}></div>
-                                            <span>Multi-Purpose Room</span>
-                                        </div>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                            <div style={{width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#b9d3e7', border: '1px solid #ccc'}}></div>
-                                            <span>HS Conference Room</span>
-                                        </div>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                            <div style={{width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#fcda00', border: '1px solid #ccc'}}></div>
-                                            <span>ES/MS Conference Room</span>
-                                        </div>
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                            <div style={{width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#638c1c', border: '1px solid #ccc'}}></div>
-                                            <span>KIPP Forward</span>
-                                        </div>
+                                        {LOCATIONS.map(loc => (
+                                            <div key={loc.id} style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                                                <div style={{width: '20px', height: '20px', borderRadius: '4px', backgroundColor: loc.color, border: '1px solid #ccc'}}></div>
+                                                <span>{loc.name.replace('Global ', '')}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                     <p style={{marginTop: '10px', fontSize: '0.9em', color: 'var(--text-mid)', fontStyle: 'italic'}}>
                                         Calendar dates show location names and times in white text. Each reservation gets its own color. Multiple reservations show as diagonal color stripes.
@@ -1924,15 +1704,12 @@ END:VCALENDAR`;
                                             <div key={day} className="calendar-day-header">{day}</div>
                                         ))}
                                         {renderCalendar().map((day, idx) => {
-                                            // Get all reservations for this day (not just unique colors)
                                             const dayReservations = reservations.filter(r => 
                                                 new Date(r.date).toDateString() === day.date.toDateString() && r.status !== 'denied'
                                             );
                                             
-                                            // Assign a unique color to each reservation
                                             const reservationsWithColors = dayReservations.map((r, index) => {
                                                 const location = LOCATIONS.find(l => l.id === r.locationId);
-                                                // Use location's brand color, or generate additional colors if needed
                                                 let color = location?.color;
                                                 if (!color && index >= LOCATIONS.length) {
                                                     const additionalColors = generateAdditionalColors(20);
@@ -1945,10 +1722,9 @@ END:VCALENDAR`;
                                                 };
                                             });
                                             
-                                            const isSelected = selectedDates.some(d => d.toDateString() === day.date.toDateString());
+                                            const isSelected = selectedDates.some(d => d && d.toDateString && d.toDateString() === day.date.toDateString());
                                             const hasReservations = reservationsWithColors.length > 0;
                                             
-                                            // Create gradient background for multiple reservations
                                             let backgroundStyle = {};
                                             if (hasReservations && !isSelected) {
                                                 if (reservationsWithColors.length === 1) {
@@ -2020,7 +1796,7 @@ END:VCALENDAR`;
                                                                         opacity: 0.95,
                                                                         whiteSpace: 'nowrap'
                                                                     }}>
-                                                                        {res.timeSlot}-{res.endTime}
+                                                                        {formatTimeSlot(res.timeSlot)} - {formatTimeSlot(res.endTime)}
                                                                     </div>
                                                                 </div>
                                                             ))}
@@ -2063,7 +1839,6 @@ END:VCALENDAR`;
                                                     const isInRange = bookedSlots.includes(time);
                                                     const isEndTime = selectedEndTime === time;
                                                     
-                                                    // Check if time is booked for ANY of the selected locations on ANY of the selected dates
                                                     const isBooked = selectedLocations.some(location => {
                                                         return selectedDates.filter(d => d).some(selectedDate => {
                                                             try {
@@ -2092,7 +1867,6 @@ END:VCALENDAR`;
                                                         });
                                                     });
                                                     
-                                                    // Check if this time would be in the middle of the selected reservation
                                                     const wouldBeInMiddle = selectedTimeSlot && selectedEndTime && 
                                                         TIME_SLOTS.indexOf(time) > TIME_SLOTS.indexOf(selectedTimeSlot) &&
                                                         TIME_SLOTS.indexOf(time) < TIME_SLOTS.indexOf(selectedEndTime);
@@ -2224,48 +1998,62 @@ END:VCALENDAR`;
                                         filteredReservations.map(reservation => (
                                             <div key={reservation.id} className={`reservation-item status-${reservation.status}`}>
                                                 <div className="reservation-header">
-                                                    <div className="reservation-title">{reservation.firstName} {reservation.lastName}</div>
+                                                    <div className="reservation-title">
+                                                        {reservation.firstName || 'N/A'} {reservation.lastName || 'N/A'}
+                                                    </div>
                                                     <div className={`reservation-status status-${reservation.status}`}>{reservation.status}</div>
                                                 </div>
                                                 <div className="reservation-details">
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">Location</span>{reservation.location}
+                                                        <span className="reservation-detail-label">Location</span>
+                                                        {reservation.location || 'N/A'}
                                                     </div>
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">Date</span>{formatDate(reservation.date)}
+                                                        <span className="reservation-detail-label">Date</span>
+                                                        {formatDate(reservation.date)}
                                                     </div>
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">Time</span>{reservation.timeSlot}
+                                                        <span className="reservation-detail-label">Start Time</span>
+                                                        {formatTimeSlot(reservation.timeSlot)}
                                                     </div>
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">End Time</span>{reservation.endTime || 'N/A'}
+                                                        <span className="reservation-detail-label">End Time</span>
+                                                        {formatTimeSlot(reservation.endTime)}
                                                     </div>
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">Duration</span>{formatDuration(reservation.duration)}
+                                                        <span className="reservation-detail-label">Duration</span>
+                                                        {formatDuration(reservation.duration || 60)}
                                                     </div>
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">School</span>{reservation.school}
+                                                        <span className="reservation-detail-label">School</span>
+                                                        {reservation.school || 'N/A'}
                                                     </div>
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">Email</span>{reservation.email}
+                                                        <span className="reservation-detail-label">Email</span>
+                                                        {reservation.email || 'N/A'}
                                                     </div>
                                                     {reservation.secondaryEmail && (
                                                         <div className="reservation-detail-item">
-                                                            <span className="reservation-detail-label">Secondary Email</span>{reservation.secondaryEmail}
+                                                            <span className="reservation-detail-label">Secondary Email</span>
+                                                            {reservation.secondaryEmail}
                                                         </div>
                                                     )}
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">Phone</span>{reservation.phone}
+                                                        <span className="reservation-detail-label">Phone</span>
+                                                        {reservation.phone || 'N/A'}
                                                     </div>
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">People</span>{reservation.numberOfPeople}
+                                                        <span className="reservation-detail-label">People</span>
+                                                        {reservation.numberOfPeople || 'N/A'}
                                                     </div>
                                                     <div className="reservation-detail-item" style={{gridColumn: '1 / -1'}}>
-                                                        <span className="reservation-detail-label">Purpose</span>{reservation.purpose}
+                                                        <span className="reservation-detail-label">Purpose</span>
+                                                        {reservation.purpose || 'N/A'}
                                                     </div>
                                                     {reservation.notes && (
                                                         <div className="reservation-detail-item" style={{gridColumn: '1 / -1'}}>
-                                                            <span className="reservation-detail-label">Notes</span>{reservation.notes}
+                                                            <span className="reservation-detail-label">Notes</span>
+                                                            {reservation.notes}
                                                         </div>
                                                     )}
                                                 </div>
