@@ -1175,8 +1175,8 @@ RESERVATION DETAILS:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Location: ${reservation.location}
 Date: ${formatDate(new Date(reservation.date))}
-Start Time: ${reservation.timeSlot}
-End Time: ${reservation.endTime}
+Start Time: ${formatTimeSlot(reservation.timeSlot)}
+End Time: ${formatTimeSlot(reservation.endTime)}
 Duration: ${formatDuration(reservation.duration)}
 
 CONTACT INFORMATION:
