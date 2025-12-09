@@ -788,7 +788,7 @@
         const { useState, useEffect, useRef } = React;
 
         // GOOGLE SHEETS DATABASE CONFIGURATION
-        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxqY3Zv8VfcFXYc0ASEgMvZ2ug0VGMZqloZlaTqhWL0AMlQodkg4TQHuPY-gmgIsKEU/exec';
+        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxkEuTcfDalnC9qaprL-9Acv8QtkU7PGe6UsqHsGJ7W7chVlYhsQzP54_dvsyAlUr9J/exec';
         const USE_GOOGLE_SHEETS = true; // Set to false to use localStorage only
 
         // EMAIL CONFIGURATION - FormSubmit (100% Free, No Setup Required)
@@ -994,28 +994,45 @@
                 setTimeout(() => setSuccessMessage(''), 3000);
             };
 
-            // Google Sheets Helper Functions
+            // Google Sheets Helper Functions - JSONP Version (Bypasses CORS)
             const saveToGoogleSheets = async (reservation) => {
                 if (!USE_GOOGLE_SHEETS) return true;
                 
                 try {
-                    console.log('💾 Saving reservation to Google Sheets...', reservation.id);
-                    const response = await fetch(GOOGLE_SHEETS_API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(reservation)
-                    });
+                    console.log('💾 Saving reservation to Google Sheets (JSONP)...', reservation.id);
                     
-                    const result = await response.json();
-                    if (result.success) {
-                        console.log('✅ Saved to Google Sheets successfully');
-                        return true;
-                    } else {
-                        console.error('❌ Failed to save to Google Sheets:', result.error);
-                        return false;
-                    }
+                    // Use JSONP approach with form submission
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = GOOGLE_SHEETS_API_URL;
+                    form.target = 'hidden-iframe-' + Date.now();
+                    form.style.display = 'none';
+                    
+                    // Create hidden iframe
+                    const iframe = document.createElement('iframe');
+                    iframe.name = form.target;
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                    
+                    // Add data as form field
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'data';
+                    input.value = JSON.stringify(reservation);
+                    form.appendChild(input);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                    
+                    // Clean up after delay
+                    setTimeout(() => {
+                        document.body.removeChild(form);
+                        document.body.removeChild(iframe);
+                    }, 3000);
+                    
+                    console.log('✅ Reservation submitted to Google Sheets');
+                    return true;
+                    
                 } catch (error) {
                     console.error('❌ Error saving to Google Sheets:', error);
                     return false;
@@ -1026,26 +1043,39 @@
                 if (!USE_GOOGLE_SHEETS) return true;
                 
                 try {
-                    console.log('📝 Updating reservation in Google Sheets...', reservation.id);
-                    const response = await fetch(GOOGLE_SHEETS_API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            ...reservation,
-                            action: 'update'
-                        })
-                    });
+                    console.log('📝 Updating reservation in Google Sheets (JSONP)...', reservation.id);
                     
-                    const result = await response.json();
-                    if (result.success) {
-                        console.log('✅ Updated in Google Sheets successfully');
-                        return true;
-                    } else {
-                        console.error('❌ Failed to update Google Sheets:', result.error);
-                        return false;
-                    }
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = GOOGLE_SHEETS_API_URL;
+                    form.target = 'hidden-iframe-' + Date.now();
+                    form.style.display = 'none';
+                    
+                    const iframe = document.createElement('iframe');
+                    iframe.name = form.target;
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                    
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'data';
+                    input.value = JSON.stringify({
+                        ...reservation,
+                        action: 'update'
+                    });
+                    form.appendChild(input);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(form);
+                        document.body.removeChild(iframe);
+                    }, 3000);
+                    
+                    console.log('✅ Update submitted to Google Sheets');
+                    return true;
+                    
                 } catch (error) {
                     console.error('❌ Error updating Google Sheets:', error);
                     return false;
@@ -1056,26 +1086,39 @@
                 if (!USE_GOOGLE_SHEETS) return true;
                 
                 try {
-                    console.log('🗑️ Deleting reservation from Google Sheets...', reservationId);
-                    const response = await fetch(GOOGLE_SHEETS_API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            id: reservationId,
-                            action: 'delete'
-                        })
-                    });
+                    console.log('🗑️ Deleting reservation from Google Sheets (JSONP)...', reservationId);
                     
-                    const result = await response.json();
-                    if (result.success) {
-                        console.log('✅ Deleted from Google Sheets successfully');
-                        return true;
-                    } else {
-                        console.error('❌ Failed to delete from Google Sheets:', result.error);
-                        return false;
-                    }
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = GOOGLE_SHEETS_API_URL;
+                    form.target = 'hidden-iframe-' + Date.now();
+                    form.style.display = 'none';
+                    
+                    const iframe = document.createElement('iframe');
+                    iframe.name = form.target;
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                    
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'data';
+                    input.value = JSON.stringify({
+                        id: reservationId,
+                        action: 'delete'
+                    });
+                    form.appendChild(input);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(form);
+                        document.body.removeChild(iframe);
+                    }, 3000);
+                    
+                    console.log('✅ Delete submitted to Google Sheets');
+                    return true;
+                    
                 } catch (error) {
                     console.error('❌ Error deleting from Google Sheets:', error);
                     return false;
