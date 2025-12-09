@@ -865,11 +865,32 @@
 
         const generateId = () => Math.random().toString(36).substr(2, 9);
         
-        const formatDate = (date) => {
-            return new Date(date).toLocaleDateString('en-US', { 
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-            });
-        };
+        const formatTimeSlot = (timeSlot) => {
+        if (!timeSlot) return 'N/A';
+        
+        // If it's already in the correct format (e.g., "10:00 AM"), return it
+        if (typeof timeSlot === 'string' && (timeSlot.includes('AM') || timeSlot.includes('PM'))) {
+            return timeSlot;
+        }
+        
+        // If it's a date string from Google Sheets (e.g., "1899-12-30T22:00:00.000Z")
+        if (typeof timeSlot === 'string' && timeSlot.includes('T')) {
+            try {
+                const date = new Date(timeSlot);
+                const hours = date.getUTCHours();
+                const minutes = date.getUTCMinutes();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const displayHours = hours % 12 || 12;
+                const displayMinutes = minutes.toString().padStart(2, '0');
+                return `${displayHours}:${displayMinutes} ${ampm}`;
+            } catch (e) {
+                console.error('Error formatting time:', e);
+                return timeSlot;
+            }
+        }
+        
+        return timeSlot; // fallback
+    };
 
         const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
         const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
