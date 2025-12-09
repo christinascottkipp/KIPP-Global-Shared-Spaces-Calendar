@@ -740,9 +740,37 @@
                                 
                                 if (result.success && result.data) {
                                     console.log(`✅ Loaded ${result.data.length} reservations via fetch`);
-                                    console.log('Sample reservation:', result.data[0]);
-                                    setReservations(result.data);
-                                    localStorage.setItem('reservations', JSON.stringify(result.data));
+                                    console.log('📋 Sample reservation from Sheets:', result.data[0]);
+                                    
+                                    // 🔥 FILTER OUT INCOMPLETE RESERVATIONS
+                                    const completeReservations = result.data.filter(r => {
+                                        // A reservation is complete if it has at least firstName OR email
+                                        const hasName = r.firstName && r.firstName !== '' && r.firstName !== 'Reserved';
+                                        const hasEmail = r.email && r.email !== '';
+                                        
+                                        if (!hasName && !hasEmail) {
+                                            console.warn('⚠️ Filtering out incomplete reservation:', r.id, r);
+                                            return false;
+                                        }
+                                        return true;
+                                    });
+                                    
+                                    console.log(`✅ After filtering: ${completeReservations.length} complete reservations (filtered out ${result.data.length - completeReservations.length})`);
+                                    
+                                    // Check if data has all required fields
+                                    if (completeReservations[0]) {
+                                        console.log('🔍 First reservation fields:', {
+                                            firstName: completeReservations[0].firstName,
+                                            lastName: completeReservations[0].lastName,
+                                            email: completeReservations[0].email,
+                                            phone: completeReservations[0].phone,
+                                            school: completeReservations[0].school,
+                                            purpose: completeReservations[0].purpose
+                                        });
+                                    }
+                                    
+                                    setReservations(completeReservations);
+                                    localStorage.setItem('reservations', JSON.stringify(completeReservations));
                                     return;
                                 }
                             } catch (fetchError) {
@@ -752,7 +780,12 @@
                             console.log('📦 Loading from localStorage for display');
                             const saved = localStorage.getItem('reservations');
                             if (saved) {
-                                setReservations(JSON.parse(saved));
+                                const data = JSON.parse(saved);
+                                console.log('📦 LocalStorage has', data.length, 'reservations');
+                                if (data[0]) {
+                                    console.log('📋 Sample from localStorage:', data[0]);
+                                }
+                                setReservations(data);
                             }
                             
                         } catch (error) {
@@ -1318,11 +1351,18 @@ END:VCALENDAR`;
                     setReservations(prev => prev.map(r => r.id === editingReservation.id ? updatedReservation : r));
                     setSuccessMessage('Reservation updated successfully!');
                 } else {
+                    // 🔥 CRITICAL: Save to state and localStorage FIRST before Google Sheets
+                    const updatedReservations = [...reservations, ...newReservations];
+                    setReservations(updatedReservations);
+                    
+                    // Force save to localStorage immediately
+                    localStorage.setItem('reservations', JSON.stringify(updatedReservations));
+                    console.log('💾 Saved to localStorage:', updatedReservations);
+                    
+                    // Then sync to Google Sheets in background
                     for (const reservation of newReservations) {
                         await saveToGoogleSheets(reservation);
                     }
-                    
-                    setReservations(prev => [...prev, ...newReservations]);
                     
                     const totalReservations = newReservations.length;
                     const locationCount = selectedLocations.length;
@@ -1975,6 +2015,61 @@ END:VCALENDAR`;
 
                             <div className="card">
                                 <h2>⚙️ Manage Reservations</h2>
+                                
+                                <div style={{marginBottom: '15px', padding: '12px', background: '#E8F5E9', borderRadius: '8px', fontSize: '0.9em'}}>
+                                    <strong>📊 Data Source:</strong> Showing {filteredReservations.length} reservation(s)
+                                    <button 
+                                        className="btn btn-secondary" 
+                                        onClick={() => {
+                                            const saved = localStorage.getItem('reservations');
+                                            if (saved) {
+                                                const data = JSON.parse(saved);
+                                                console.log('📦 LocalStorage data:', data);
+                                                setReservations(data);
+                                                setSuccessMessage(`Refreshed! Loaded ${data.length} reservations from local storage.`);
+                                                setTimeout(() => setSuccessMessage(''), 3000);
+                                            }
+                                        }}
+                                        style={{marginLeft: '15px', padding: '8px 16px', fontSize: '0.85em'}}>
+                                        🔄 Refresh from Local Storage
+                                    </button>
+                                    <button 
+                                        className="btn btn-danger" 
+                                        onClick={async () => {
+                                            if (confirm('⚠️ This will DELETE all reservations with missing contact information (name/email). This helps clean up incomplete data from Google Sheets.\n\nAre you sure?')) {
+                                                const incompleteReservations = reservations.filter(r => {
+                                                    const hasName = r.firstName && r.firstName !== '' && r.firstName !== 'Reserved';
+                                                    const hasEmail = r.email && r.email !== '';
+                                                    return !hasName && !hasEmail;
+                                                });
+                                                
+                                                console.log(`🗑️ Found ${incompleteReservations.length} incomplete reservations to delete`);
+                                                
+                                                for (const res of incompleteReservations) {
+                                                    console.log('🗑️ Deleting incomplete reservation:', res.id);
+                                                    await deleteFromGoogleSheets(res.id);
+                                                }
+                                                
+                                                // Update local state to remove incomplete ones
+                                                const completeReservations = reservations.filter(r => {
+                                                    const hasName = r.firstName && r.firstName !== '' && r.firstName !== 'Reserved';
+                                                    const hasEmail = r.email && r.email !== '';
+                                                    return hasName || hasEmail;
+                                                });
+                                                
+                                                setReservations(completeReservations);
+                                                localStorage.setItem('reservations', JSON.stringify(completeReservations));
+                                                
+                                                setSuccessMessage(`✅ Cleaned up ${incompleteReservations.length} incomplete reservation(s). Page will reload in 2 seconds...`);
+                                                setTimeout(() => {
+                                                    window.location.reload();
+                                                }, 2000);
+                                            }
+                                        }}
+                                        style={{marginLeft: '10px', padding: '8px 16px', fontSize: '0.85em'}}>
+                                        🧹 Clean Up Incomplete Data
+                                    </button>
+                                </div>
                                 
                                 <div className="filter-bar">
                                     <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
