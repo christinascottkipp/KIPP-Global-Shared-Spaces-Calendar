@@ -1975,7 +1975,8 @@ END:VCALENDAR`;
                                                                         opacity: 0.95,
                                                                         whiteSpace: 'nowrap'
                                                                     }}>
-                                                                        {res.timeSlot}-{res.endTime}
+                                                                        {formatTimeSlot(res.timeSlot)}-
+                                                                {formatTimeSlot(res.endTime)}
                                                                     </div>
                                                                 </div>
                                                             ))}
@@ -2162,18 +2163,12 @@ END:VCALENDAR`;
                                                     </div>
                                                     <div className="reservation-detail-item">
                                                         <span className="reservation-detail-label">Date</span>{formatDate(reservation.date)}
+                                                    <div className="reservation-detail-item">
+                                                        <span className="reservation-detail-label">Time</span>{formatTimeSlot(reservation.timeSlot)}
                                                     </div>
                                                     <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">Time</span>{reservation.timeSlot}
+                                                        <span className="reservation-detail-label">End Time</span>{formatTimeSlot(reservation.endTime)}
                                                     </div>
-                                                    <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">End Time</span>{reservation.endTime || 'N/A'}
-                                                    </div>
-                                                    <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">Duration</span>{formatDuration(reservation.duration)}
-                                                    </div>
-                                                    <div className="reservation-detail-item">
-                                                        <span className="reservation-detail-label">School</span>{reservation.school}
                                                     </div>
                                                     <div className="reservation-detail-item">
                                                         <span className="reservation-detail-label">Email</span>{reservation.email}
