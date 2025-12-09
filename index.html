@@ -788,7 +788,7 @@
         const { useState, useEffect, useRef } = React;
 
         // GOOGLE SHEETS DATABASE CONFIGURATION
-        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxkEuTcfDalnC9qaprL-9Acv8QtkU7PGe6UsqHsGJ7W7chVlYhsQzP54_dvsyAlUr9J/exec';
+        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbwckqflPi3sw_hHW7qWelJNHuO9pvi478Q7ci6OLZMdbWGjynIxjRIGjDgTdArsnsX1/exec';
         const USE_GOOGLE_SHEETS = true; // Set to false to use localStorage only
 
         // EMAIL CONFIGURATION - FormSubmit (100% Free, No Setup Required)
@@ -905,27 +905,37 @@
             });
 
             useEffect(() => {
-                // Load reservations from Google Sheets
+                // Load reservations from Google Sheets using polling with hidden iframe
                 const loadReservations = async () => {
                     if (USE_GOOGLE_SHEETS) {
                         try {
                             console.log('📊 Loading reservations from Google Sheets...');
-                            const response = await fetch(GOOGLE_SHEETS_API_URL);
-                            const result = await response.json();
                             
-                            if (result.success && result.data) {
-                                console.log(`✅ Loaded ${result.data.length} reservations from Google Sheets`);
-                                setReservations(result.data);
-                                // Also save to localStorage as backup
-                                localStorage.setItem('reservations', JSON.stringify(result.data));
-                            } else {
-                                console.warn('⚠️ No data from Google Sheets, loading from localStorage backup');
-                                const saved = localStorage.getItem('reservations');
-                                if (saved) setReservations(JSON.parse(saved));
+                            // Try direct fetch first (will work if no CORS)
+                            try {
+                                const response = await fetch(GOOGLE_SHEETS_API_URL);
+                                const result = await response.json();
+                                
+                                if (result.success && result.data) {
+                                    console.log(`✅ Loaded ${result.data.length} reservations via fetch`);
+                                    setReservations(result.data);
+                                    localStorage.setItem('reservations', JSON.stringify(result.data));
+                                    return;
+                                }
+                            } catch (fetchError) {
+                                console.log('⚠️ Fetch failed (CORS), will use localStorage for display');
+                                // Don't throw - just continue to localStorage
                             }
+                            
+                            // Use localStorage as display source
+                            console.log('📦 Loading from localStorage for display');
+                            const saved = localStorage.getItem('reservations');
+                            if (saved) {
+                                setReservations(JSON.parse(saved));
+                            }
+                            
                         } catch (error) {
-                            console.error('❌ Error loading from Google Sheets:', error);
-                            console.log('📦 Falling back to localStorage');
+                            console.error('❌ Error in load process:', error);
                             const saved = localStorage.getItem('reservations');
                             if (saved) setReservations(JSON.parse(saved));
                         }
@@ -938,11 +948,16 @@
                 
                 loadReservations();
                 
+                // Reload data every 30 seconds to keep fresh
+                const interval = setInterval(loadReservations, 30000);
+                
                 const savedAdmin = localStorage.getItem('adminEmail');
                 if (savedAdmin && AUTHORIZED_ADMINS.includes(savedAdmin.toLowerCase())) {
                     setAdminEmail(savedAdmin);
                     setIsAdminAuthenticated(true);
                 }
+                
+                return () => clearInterval(interval);
             }, []);
 
             useEffect(() => {
