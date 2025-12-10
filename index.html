@@ -759,13 +759,24 @@
 
             useEffect(() => {
                 const loadReservations = async () => {
+                    console.log('🔄 Starting loadReservations...');
+                    console.log('📊 USE_GOOGLE_SHEETS:', USE_GOOGLE_SHEETS);
+                    console.log('📊 GOOGLE_SHEETS_API_URL:', GOOGLE_SHEETS_API_URL);
+                    
                     if (USE_GOOGLE_SHEETS) {
                         try {
                             console.log('📊 Loading reservations from Google Sheets...');
                             
                             try {
+                                console.log('🌐 Fetching from:', GOOGLE_SHEETS_API_URL);
                                 const response = await fetch(GOOGLE_SHEETS_API_URL);
+                                console.log('📡 Response status:', response.status);
+                                console.log('📡 Response ok:', response.ok);
+                                
                                 const result = await response.json();
+                                console.log('📦 Parsed result:', result);
+                                console.log('📦 Result.success:', result.success);
+                                console.log('📦 Result.data length:', result.data ? result.data.length : 'NO DATA');
                                 
                                 if (result.success && result.data) {
                                     console.log(`✅ Loaded ${result.data.length} reservations via fetch`);
@@ -774,38 +785,81 @@
                                     // Just use all data - don't filter anything
                                     // Filtering was too aggressive and hiding valid reservations
                                     
+                                    if (result.data.length === 0) {
+                                        console.warn('⚠️ WARNING: Google Sheets returned ZERO reservations!');
+                                        console.warn('⚠️ Check your Google Sheet - does it have data rows?');
+                                    }
+                                    
                                     if (result.data[0]) {
                                         console.log('🔍 First reservation fields:', result.data[0]);
                                     }
                                     
+                                    console.log('💾 Setting reservations state with', result.data.length, 'items');
                                     setReservations(result.data);
                                     localStorage.setItem('reservations', JSON.stringify(result.data));
+                                    console.log('✅ State and localStorage updated');
                                     return;
+                                } else {
+                                    console.error('❌ Invalid response from Google Sheets:', result);
+                                    if (result.error) {
+                                        console.error('❌ Error message:', result.error);
+                                        alert('Error loading from Google Sheets: ' + result.error);
+                                    }
                                 }
                             } catch (fetchError) {
-                                console.log('⚠️ Fetch failed (CORS), will use localStorage for display');
+                                console.error('❌ Fetch failed:', fetchError);
+                                console.error('❌ Error details:', fetchError.message, fetchError.stack);
+                                console.log('⚠️ Will try to use localStorage for display');
                             }
                             
-                            console.log('📦 Loading from localStorage for display');
+                            console.log('📦 Attempting to load from localStorage as fallback');
                             const saved = localStorage.getItem('reservations');
                             if (saved) {
-                                const data = JSON.parse(saved);
-                                console.log('📦 LocalStorage has', data.length, 'reservations');
-                                if (data[0]) {
-                                    console.log('📋 Sample from localStorage:', data[0]);
+                                try {
+                                    const data = JSON.parse(saved);
+                                    console.log('📦 LocalStorage has', data.length, 'reservations');
+                                    if (data[0]) {
+                                        console.log('📋 Sample from localStorage:', data[0]);
+                                    }
+                                    setReservations(data);
+                                    console.log('✅ Loaded from localStorage');
+                                } catch (parseError) {
+                                    console.error('❌ Error parsing localStorage:', parseError);
+                                    setReservations([]);
                                 }
-                                setReservations(data);
+                            } else {
+                                console.warn('⚠️ No data in localStorage either!');
+                                setReservations([]);
                             }
                             
                         } catch (error) {
-                            console.error('❌ Error in load process:', error);
+                            console.error('❌ Critical error in load process:', error);
+                            console.error('❌ Error details:', error.message, error.stack);
                             const saved = localStorage.getItem('reservations');
-                            if (saved) setReservations(JSON.parse(saved));
+                            if (saved) {
+                                try {
+                                    setReservations(JSON.parse(saved));
+                                    console.log('✅ Recovered from localStorage after error');
+                                } catch (e) {
+                                    console.error('❌ Cannot even load localStorage:', e);
+                                    setReservations([]);
+                                }
+                            } else {
+                                setReservations([]);
+                            }
                         }
                     } else {
+                        console.log('📦 Google Sheets disabled, loading from localStorage only');
                         const saved = localStorage.getItem('reservations');
-                        if (saved) setReservations(JSON.parse(saved));
+                        if (saved) {
+                            setReservations(JSON.parse(saved));
+                        } else {
+                            console.warn('⚠️ No localStorage data available');
+                            setReservations([]);
+                        }
                     }
+                    
+                    console.log('🏁 loadReservations completed');
                 };
                 
                 loadReservations();
