@@ -667,7 +667,9 @@
 
         // 🔥 CRITICAL FIX: Format time slots to handle Google Sheets ISO dates
         const formatTimeSlot = (timeSlot) => {
-            if (!timeSlot || timeSlot === 'N/A' || timeSlot === '') return 'N/A';
+            if (!timeSlot || timeSlot === 'N/A' || timeSlot === '') {
+                return 'N/A';
+            }
             
             // If it's already in correct format (e.g., "10:00 PM"), return it
             if (typeof timeSlot === 'string' && (timeSlot.includes('AM') || timeSlot.includes('PM'))) {
@@ -678,20 +680,47 @@
             if (typeof timeSlot === 'string' && timeSlot.includes('T')) {
                 try {
                     const date = new Date(timeSlot);
-                    const hours = date.getUTCHours();
+                    
+                    // Check if date is valid
+                    if (isNaN(date.getTime())) {
+                        console.error('❌ Invalid date in formatTimeSlot:', timeSlot);
+                        return String(timeSlot);
+                    }
+                    
+                    // Use UTC hours since Google Sheets stores times as UTC
+                    let hours = date.getUTCHours();
                     const minutes = date.getUTCMinutes();
                     
+                    // Log for debugging (only for problematic times)
+                    if (hours >= 20 || hours <= 5) {
+                        console.warn('⚠️ Suspicious time detected:', {
+                            input: timeSlot,
+                            parsedHours: hours,
+                            parsedMinutes: minutes,
+                            dateObject: date.toISOString()
+                        });
+                    }
+                    
+                    // Determine AM/PM
                     const ampm = hours >= 12 ? 'PM' : 'AM';
-                    const displayHours = hours % 12 || 12;
+                    
+                    // Convert to 12-hour format
+                    let displayHours = hours % 12;
+                    if (displayHours === 0) displayHours = 12;
+                    
                     const displayMinutes = minutes.toString().padStart(2, '0');
                     
-                    return `${displayHours}:${displayMinutes} ${ampm}`;
+                    const result = `${displayHours}:${displayMinutes} ${ampm}`;
+                    
+                    return result;
                 } catch (e) {
-                    console.error('Error formatting time:', e, timeSlot);
+                    console.error('❌ Error formatting time:', e, 'Input:', timeSlot);
                     return String(timeSlot);
                 }
             }
             
+            // Fallback
+            console.warn('⚠️ Unexpected time format:', timeSlot, 'Type:', typeof timeSlot);
             return String(timeSlot);
         };
 
@@ -967,9 +996,19 @@
             };
 
             const sendEmail = async (type, reservation) => {
-                console.log('📧 Starting email send process...');
+                console.log('═══════════════════════════════════════');
+                console.log('📧 STARTING EMAIL SEND PROCESS');
                 console.log('Email type:', type);
-                console.log('Reservation data:', reservation);
+                console.log('User email:', reservation.email);
+                console.log('Secondary email:', reservation.secondaryEmail);
+                console.log('Reservation ID:', reservation.id);
+                console.log('═══════════════════════════════════════');
+                
+                if (!reservation.email) {
+                    console.error('❌ ERROR: No email address in reservation!');
+                    alert('Error: Cannot send email - no email address provided');
+                    return;
+                }
                 
                 const userEmail = reservation.email;
                 const secondaryEmail = reservation.secondaryEmail;
@@ -1106,8 +1145,13 @@ Please log in to the reservation system to approve or deny this request.
 KIPP Antioch Global Campus Reservation System`;
 
                         console.log('📤 Sending pending notifications to', ADMIN_NOTIFICATION_EMAILS.length, 'admins');
+                        console.log('📋 Admin emails:', ADMIN_NOTIFICATION_EMAILS);
+                        
+                        let successCount = 0;
+                        let failCount = 0;
+                        
                         for (const adminEmail of ADMIN_NOTIFICATION_EMAILS) {
-                            console.log('📤 Sending to admin:', adminEmail);
+                            console.log(`📤 Attempting to send to admin: ${adminEmail}`);
                             const adminFormData = new FormData();
                             adminFormData.append('email', adminEmail);
                             adminFormData.append('_subject', subject);
@@ -1120,17 +1164,32 @@ KIPP Antioch Global Campus Reservation System`;
                                     method: 'POST',
                                     body: adminFormData
                                 });
-                                console.log(`✅ Email sent to ${adminEmail}, status:`, response.status);
+                                console.log(`✅ Email sent to ${adminEmail}, status: ${response.status}`);
+                                successCount++;
                             } catch (err) {
                                 console.error(`❌ Failed to send to ${adminEmail}:`, err);
+                                failCount++;
                             }
+                        }
+                        
+                        console.log(`📊 Email Summary: ${successCount} successful, ${failCount} failed out of ${ADMIN_NOTIFICATION_EMAILS.length} total`);
+                        
+                        if (failCount === ADMIN_NOTIFICATION_EMAILS.length) {
+                            alert('Warning: Failed to send email notifications to admins. Please contact IT support.');
                         }
                     }
 
-                    console.log('📧 Email process completed!');
+                    console.log('═══════════════════════════════════════');
+                    console.log('✅ EMAIL PROCESS COMPLETED!');
+                    console.log('═══════════════════════════════════════');
                 } catch (error) {
-                    console.error('❌ Error sending email:', error);
-                    alert('Warning: Email notification may have failed. Please contact an admin to confirm your reservation was received.');
+                    console.error('═══════════════════════════════════════');
+                    console.error('❌ CRITICAL ERROR IN EMAIL PROCESS:');
+                    console.error('Error:', error);
+                    console.error('Error message:', error.message);
+                    console.error('Error stack:', error.stack);
+                    console.error('═══════════════════════════════════════');
+                    alert(`Warning: Email notification failed. Error: ${error.message}\n\nYour reservation was saved, but admins may not have been notified. Please contact an admin to confirm.`);
                 }
             };
 
@@ -1362,7 +1421,12 @@ END:VCALENDAR`;
                     setLastCreatedReservation(newReservations[0]);
                     setShowCalendarDownload(true);
                     
-                    newReservations.forEach(res => sendEmail('pending', res));
+                    console.log('📧 About to send emails for', newReservations.length, 'reservations');
+                    newReservations.forEach((res, index) => {
+                        console.log(`📧 Sending email ${index + 1} of ${newReservations.length} for reservation:`, res.id);
+                        sendEmail('pending', res);
+                    });
+                    console.log('📧 All email calls initiated');
                 }
 
                 setFormData({
@@ -1815,6 +1879,14 @@ END:VCALENDAR`;
                                                                         fontSize: '0.95em', 
                                                                         opacity: 0.95,
                                                                         whiteSpace: 'nowrap'
+                                                                    }}
+                                                                    onClick={() => {
+                                                                        console.log('🔍 DEBUG - Clicked reservation time display:');
+                                                                        console.log('  Raw timeSlot:', res.timeSlot);
+                                                                        console.log('  Raw endTime:', res.endTime);
+                                                                        console.log('  Formatted timeSlot:', formatTimeSlot(res.timeSlot));
+                                                                        console.log('  Formatted endTime:', formatTimeSlot(res.endTime));
+                                                                        console.log('  Full reservation:', res);
                                                                     }}>
                                                                         {formatTimeSlot(res.timeSlot)} - {formatTimeSlot(res.endTime)}
                                                                     </div>
@@ -1859,6 +1931,25 @@ END:VCALENDAR`;
                                                     const isInRange = bookedSlots.includes(time);
                                                     const isEndTime = selectedEndTime === time;
                                                     
+                                                    // Debug: Log booking check for first time slot only
+                                                    if (time === TIME_SLOTS[0] && selectedDates.length > 0 && selectedLocations.length > 0) {
+                                                        console.log('🔍 Checking bookings for:', {
+                                                            selectedDate: selectedDates[0]?.toDateString(),
+                                                            selectedLocation: selectedLocations[0]?.name,
+                                                            reservationsForThisDate: reservations.filter(r => {
+                                                                const resDate = new Date(r.date);
+                                                                return resDate.toDateString() === selectedDates[0]?.toDateString() && 
+                                                                       r.locationId === selectedLocations[0]?.id &&
+                                                                       r.status !== 'denied';
+                                                            }).map(r => ({
+                                                                timeSlot: r.timeSlot,
+                                                                formattedTime: formatTimeSlot(r.timeSlot),
+                                                                endTime: r.endTime,
+                                                                formattedEndTime: formatTimeSlot(r.endTime)
+                                                            }))
+                                                        });
+                                                    }
+                                                    
                                                     const isBooked = selectedLocations.some(location => {
                                                         return selectedDates.filter(d => d).some(selectedDate => {
                                                             try {
@@ -1871,14 +1962,23 @@ END:VCALENDAR`;
                                                                         return false;
                                                                     }
                                                                     
-                                                                    if (r.endTime) {
+                                                                    // Format both times to compare properly
+                                                                    const formattedResTimeSlot = formatTimeSlot(r.timeSlot);
+                                                                    const formattedResEndTime = formatTimeSlot(r.endTime);
+                                                                    
+                                                                    if (r.endTime && formattedResEndTime !== 'N/A') {
                                                                         const timeIndex = TIME_SLOTS.indexOf(time);
-                                                                        const resStartIndex = TIME_SLOTS.indexOf(r.timeSlot);
-                                                                        const resEndIndex = TIME_SLOTS.indexOf(r.endTime);
-                                                                        return timeIndex >= resStartIndex && timeIndex < resEndIndex;
+                                                                        const resStartIndex = TIME_SLOTS.indexOf(formattedResTimeSlot);
+                                                                        const resEndIndex = TIME_SLOTS.indexOf(formattedResEndTime);
+                                                                        
+                                                                        if (resStartIndex !== -1 && resEndIndex !== -1) {
+                                                                            return timeIndex >= resStartIndex && timeIndex < resEndIndex;
+                                                                        }
                                                                     } else {
-                                                                        return r.timeSlot === time;
+                                                                        return formattedResTimeSlot === time;
                                                                     }
+                                                                    
+                                                                    return false;
                                                                 });
                                                             } catch (e) {
                                                                 console.error('Error checking booking:', e);
